@@ -1,0 +1,87 @@
+/* Page base styles */
+body {
+    background-color:#e0f7fa ;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Centering container */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: bisque;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  /* Header */
+  .header {
+    background-color: lightskyblue;
+    padding: 20px;
+    color: black;
+    text-align: center;
+  }
+  
+  /* Main content styling */
+  .mainbody {
+    padding: 20px;
+  }
+  
+  /* Image styling */
+  img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 20px auto;
+    display: block;
+  }
+  
+  .list-section {
+    background-color: #e0f7fa;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box; /* important! */
+    text-align: center;
+    font-size: large;
+  }
+  
+  /* Keep the list aligned nicely inside */
+  .list-section ol {
+    text-align: center;
+    display: inline-block;
+  }
+  
+  
+  
+  /* Video and Tableau */
+  .video, .tableau {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Footer */
+  .footer {
+    background-color: lightskyblue;
+    text-align: center;
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+  }
+  
+  .footer a {
+    display: block;
+    margin: 5px 0;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .footer a:hover {
+    text-decoration: underline;
+  }
+  

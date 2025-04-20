@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IS Word Guesser</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fdf6e3;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    #board {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: 0.5rem;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+    .tile {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #3a3a3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      text-transform: uppercase;
+      background: #fff;
+      color: black;
+    }
+    .correct {
+      background: #538d4e;
+      border-color: #538d4e;
+      color: white;
+    }
+    .present {
+      background: #b59f3b;
+      border-color: #b59f3b;
+      color: white;
+    }
+    .absent {
+      background: #3a3a3c;
+      border-color: #3a3a3c;
+      color: white;
+    }
+    #message {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+    .win {
+      color: #ff69b4; /* bright pink */
+    }
+    input {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 1rem 0.5rem 0 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #controls {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #playAgain {
+      display: none;
+    }
+    #homeButton {
+      margin-top: 2rem;
+      padding: 0.5rem 1.5rem;
+      font-size: 1rem;
+      background-color: #3a3a3c;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    #homeButton:hover {
+      background-color: #5a5a5d;
+    }
+  </style>
+</head>
+<body>
+  <h1>IS Word Guesser</h1>
+  <div id="board"></div>
+  <div id="controls">
+    <input type="text" id="guessInput" maxlength="5" />
+    <button onclick="submitGuess()">Submit</button>
+    <button id="playAgain" onclick="resetGame()">Play Again</button>
+  </div>
+  <div id="message"></div>
+
+  <button id="homeButton" onclick="goHome()">Back to Home</button>
+
+  <script>
+    const WORD_LIST = ["final", "class", "excel", "coder", "reese", "types"];
+    let targetWord, currentRow;
+
+    const board = document.getElementById("board");
+    const input = document.getElementById("guessInput");
+    const message = document.getElementById("message");
+    const playAgainBtn = document.getElementById("playAgain");
+
+    function initGame() {
+      board.innerHTML = "";
+      message.textContent = "";
+      message.className = "";
+      input.value = "";
+      input.disabled = false;
+      playAgainBtn.style.display = "none";
+      currentRow = 0;
+      targetWord = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toLowerCase();
+
+      for (let i = 0; i < 6; i++) {
+        const row = document.createElement("div");
+        row.classList.add("row");
+        for (let j = 0; j < 5; j++) {
+          const tile = document.createElement("div");
+          tile.classList.add("tile");
+          row.appendChild(tile);
+        }
+        board.appendChild(row);
+      }
+    }
+
+    function submitGuess() {
+      const guess = input.value.toLowerCase();
+      if (guess.length !== 5) {
+        message.textContent = "Please enter a 5-letter word.";
+        message.className = "";
+        return;
+      }
+
+      if (currentRow >= 6) return;
+
+      const rowTiles = board.children[currentRow].children;
+      const targetArr = targetWord.split("");
+      const guessArr = guess.split("");
+      const letterCount = {};
+
+      targetArr.forEach(letter => {
+        letterCount[letter] = (letterCount[letter] || 0) + 1;
+      });
+
+      for (let i = 0; i < 5; i++) {
+        rowTiles[i].textContent = guessArr[i];
+        if (guessArr[i] === targetArr[i]) {
+          rowTiles[i].classList.add("correct");
+          letterCount[guessArr[i]]--;
+        }
+      }
+
+      for (let i = 0; i < 5; i++) {
+        if (!rowTiles[i].classList.contains("correct")) {
+          if (letterCount[guessArr[i]] > 0) {
+            rowTiles[i].classList.add("present");
+            letterCount[guessArr[i]]--;
+          } else {
+            rowTiles[i].classList.add("absent");
+          }
+        }
+      }
+
+      if (guess === targetWord) {
+        message.textContent = "You guessed it :)";
+        message.className = "win";
+        endGame();
+      } else if (currentRow === 5) {
+        message.textContent = `Out of tries! The word was "${targetWord.toUpperCase()}".`;
+        message.className = "";
+        endGame();
+      } else {
+        currentRow++;
+        input.value = "";
+        message.textContent = "";
+        message.className = "";
+      }
+    }
+
+    function endGame() {
+      input.disabled = true;
+      playAgainBtn.style.display = "inline-block";
+    }
+
+    function resetGame() {
+      initGame();
+    }
+
+    function goHome() {
+      // Replace with actual home page if needed
+      window.location.href = "index.html";
+    }
+
+    input.addEventListener("keyup", (e) => {
+      if (e.key === "Enter") submitGuess();
+    });
+
+    initGame();
+  </script>
+</body>
+</html>
